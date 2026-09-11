@@ -80,6 +80,44 @@ export default async function DashboardPage() {
             </div>
           </div>
 
+          <div className="mt-5 rounded-2xl bg-white/75 p-4 ring-1 ring-rose2-100">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold text-plum-800">Cycle phases</p>
+                <p className="text-sm text-stone-600">
+                  A simple guide to the main stages of the menstrual cycle.
+                </p>
+              </div>
+              <span className="text-2xl">🌺</span>
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-2xl bg-rose2-50 p-4">
+                <p className="text-xl">🩸</p>
+                <p className="mt-2 font-semibold text-plum-800">Menstrual phase</p>
+                <p className="mt-1 text-sm text-stone-600">Bleeding begins. This is Day 1 of a new cycle.</p>
+              </div>
+
+              <div className="rounded-2xl bg-blush-50 p-4">
+                <p className="text-xl">🌱</p>
+                <p className="mt-2 font-semibold text-plum-800">Follicular phase</p>
+                <p className="mt-1 text-sm text-stone-600">The body prepares an egg for possible ovulation.</p>
+              </div>
+
+              <div className="rounded-2xl bg-lavender-50 p-4">
+                <p className="text-xl">🥚</p>
+                <p className="mt-2 font-semibold text-plum-800">Ovulation</p>
+                <p className="mt-1 text-sm text-stone-600">An egg may be released. Timing varies from cycle to cycle.</p>
+              </div>
+
+              <div className="rounded-2xl bg-peach-50 p-4">
+                <p className="text-xl">🌙</p>
+                <p className="mt-2 font-semibold text-plum-800">Luteal phase</p>
+                <p className="mt-1 text-sm text-stone-600">The body transitions toward the next period if pregnancy does not occur.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-4 rounded-2xl bg-white/80 p-4 text-sm text-stone-600 ring-1 ring-rose2-100">
             <p className="font-semibold text-plum-800">Fertility guidance</p>
             <p className="mt-1">
