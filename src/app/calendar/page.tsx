@@ -15,6 +15,9 @@ export default async function CalendarPage() {
   return (
     <div><Nav />
       <main id="main" className="mx-auto max-w-5xl px-5 py-8">
+        <a href="/dashboard" className="inline-block mb-4 font-semibold text-plum-700 hover:underline">
+          ← Back to Home
+        </a>
         <h1 className="text-3xl font-bold text-plum-800">Calendar</h1>
         <p className="text-sm text-stone-600">Period days ● · Predicted ◐ · Fertile window (estimate) ◑ — labels included, not color alone.</p>
         <div className="card mt-4">
