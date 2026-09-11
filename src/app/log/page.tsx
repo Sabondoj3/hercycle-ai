@@ -54,7 +54,7 @@ export default function LogPage() {
         {msg && <p role="status" className="text-sm font-semibold">{msg}</p>}
       </form>
       <div className="card mt-4">
-        <h2 className="font-bold">New period?</h2>
+        <h2 className="font-bold">Did your period start today?</h2>
         <form className="mt-2 flex flex-wrap gap-2" onSubmit={async (e) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); const r = await fetch("/api/cycles", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ startDate: String(fd.get("startDate")) }) }); if (r.ok) {
   setMsg("Period recorded.");
 } else {
@@ -62,7 +62,7 @@ export default function LogPage() {
   setMsg(data.error || "Could not record period.");
 } }}>
           <input name="startDate" type="date" defaultValue={today} className="input !w-auto" required aria-label="Period start date" />
-          <button className="btn-secondary">Record period start</button>
+          <button className="btn-secondary">Yes, record period start</button>
         </form>
       </div>
     </main>
