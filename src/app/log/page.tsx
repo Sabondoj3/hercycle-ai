@@ -21,7 +21,13 @@ export default function LogPage() {
     };
     if (!body.flow) delete body.flow;
     const res = await fetch("/api/log-day", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    setMsg(res.ok ? "Saved. Thank you for logging." : "Could not save — check the date and try again.");
+    if (res.ok) {
+      e.currentTarget.reset();
+      window.location.href = "/dashboard";
+      return;
+    }
+
+    setMsg("Could not save — check the date and try again.");
   }
   const today = new Date().toISOString().slice(0, 10);
   return (
