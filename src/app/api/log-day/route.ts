@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { dayLogSchema } from "@/lib/validation";
-import { recomputeAlerts } from "../cycles/route";
+import { recomputeAlerts } from "@/lib/recompute-alerts";
 
 export async function POST(req: Request) {
   const session = await auth();
