@@ -1,0 +1,363 @@
+// HerCycle AI — normalized schema (PostgreSQL + Prisma)
+// UUIDs used for user-facing / sensitive entities.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String
+  fullName      String
+  displayName   String?
+  dateOfBirth   DateTime
+  country       String
+  locale        String    @default("en")
+  phone         String?
+  profileImage  String?
+  heightCm      Float?
+  weightKg      Float?
+  typicalCycleLength  Int?
+  typicalPeriodLength Int?
+  appLockPinHash String?
+  privacyMode    Boolean  @default(false)
+  neutralNotifications Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile  UserProfile?
+  consents Consent[]
+  cycles   CycleRecord[]
+  moods    MoodLog[]
+  pains    PainLog[]
+  meds     MedicationLog[]
+  wellness WellnessLog[]
+  notes    UserNote[]
+  predictions CyclePrediction[]
+  alerts   HealthAlert[]
+  conversations AiConversation[]
+  notifications Notification[]
+  notifPrefs NotificationPreference?
+  reports  HealthReport[]
+  documents HealthDocument[]
+  sessions SessionAudit[]
+  resetTokens PasswordResetToken[]
+  accounts Account[]
+  sessionsNextAuth Session[]
+}
+
+model UserProfile {
+  id        String @id @default(uuid())
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  onboardingDone Boolean @default(false)
+  lastPeriodStart DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Consent {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // privacy_policy | terms | tracking | ai_processing | notifications | analytics | cloud_storage
+  granted   Boolean
+  version   String  @default("v1")
+  createdAt DateTime @default(now())
+  @@index([userId, type])
+}
+
+model CycleRecord {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  days      PeriodDay[]
+  @@index([userId, startDate])
+}
+
+model PeriodDay {
+  id        String @id @default(uuid())
+  cycleId   String
+  cycle     CycleRecord @relation(fields: [cycleId], references: [id], onDelete: Cascade)
+  date      DateTime
+  flow      String // spotting | light | medium | heavy
+  spottingBetweenPeriods Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@index([cycleId, date])
+}
+
+model SymptomCatalog {
+  id   String @id @default(uuid())
+  key  String @unique // e.g. cramps, back_pain
+  label String
+  category String @default("symptom")
+}
+
+model DailySymptom {
+  id        String @id @default(uuid())
+  userId    String
+  date      DateTime
+  symptomKey String
+  present   Boolean @default(true)
+  severity  Int? // 0-10 optional
+  bodyLocation String? // head|breasts|abdomen|pelvic|back|legs
+  createdAt DateTime @default(now())
+  @@index([userId, date])
+}
+
+model MoodLog {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  mood      String // happy|calm|energetic|sad|irritable|anxious|stressed|low
+  createdAt DateTime @default(now())
+  @@index([userId, date])
+}
+
+model PainLog {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  score     Int // 0-10
+  locations String[] // lower_abdomen|back|legs|pelvic|headache
+  createdAt DateTime @default(now())
+  @@index([userId, date])
+}
+
+model MedicationLog {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  name      String
+  dose      String?
+  kind      String @default("medication") // medication|supplement
+  createdAt DateTime @default(now())
+  @@index([userId, date])
+}
+
+model WellnessLog {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  temperatureC Float?
+  weightKg  Float?
+  sleepHours Float?
+  stressLevel Int? // 0-10
+  waterMl   Int?
+  exerciseMin Int?
+  exerciseType String?
+  createdAt DateTime @default(now())
+  @@index([userId, date])
+}
+
+model UserNote {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  text      String
+  forDoctor Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@index([userId, date])
+}
+
+model CyclePrediction {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generatedAt DateTime @default(now())
+  basisCycles Int
+  avgCycleLength Float?
+  nextPeriodStart DateTime?
+  nextPeriodEndRange DateTime?
+  fertileStart DateTime?
+  fertileEnd   DateTime?
+  ovulationDate DateTime?
+  confidence String // low|moderate|high|insufficient
+  explanation String
+}
+
+model HealthAlert {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ruleId    String
+  level     String // green|yellow|orange|red
+  title     String
+  message   String // cautious, non-diagnostic wording
+  evidenceSummary String
+  createdAt DateTime @default(now())
+  acknowledgedAt DateTime?
+  @@index([userId, createdAt])
+}
+
+model AiConversation {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String @default("Conversation")
+  shameFree Boolean @default(false)
+  anonymousDisplay Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  messages  AiMessage[]
+}
+
+model AiMessage {
+  id             String @id @default(uuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String // user|assistant|system
+  content        String
+  createdAt      DateTime @default(now())
+  @@index([conversationId, createdAt])
+}
+
+model NotificationPreference {
+  id        String @id @default(uuid())
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  periodReminder Boolean @default(true)
+  fertileReminder Boolean @default(false)
+  logReminder Boolean @default(true)
+  medicationReminder Boolean @default(false)
+  hydrationReminder Boolean @default(false)
+  followUpReminder Boolean @default(true)
+  channelEmail Boolean @default(true)
+  channelPush  Boolean @default(false)
+  daysBeforePeriod Int @default(2)
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String
+  neutralBody String?
+  scheduledFor DateTime
+  sentAt    DateTime?
+  createdAt DateTime @default(now())
+  @@index([userId, scheduledFor])
+}
+
+model HealthReport {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rangeStart DateTime
+  rangeEnd   DateTime
+  summaryJson String // JSON string of computed summary
+  createdAt DateTime @default(now())
+}
+
+model HealthDocument {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileName  String
+  mimeType  String
+  storageKey String
+  category  String @default("other") // prescription|lab|doctor_note|ultrasound|other
+  createdAt DateTime @default(now())
+}
+
+model EducationArticle {
+  id        String @id @default(uuid())
+  slug      String @unique
+  title     String
+  category  String
+  bodyMd    String
+  sources   String[] // URLs / citations
+  reviewedAt DateTime?
+  locale    String @default("en")
+}
+
+model HealthRule {
+  id        String @id // stable rule_id e.g. short_cycle
+  name      String
+  description String
+  evidenceSource String
+  thresholdJson String // JSON
+  severity  String // yellow|orange|red
+  recommendation String
+  clinicianReviewRequired Boolean @default(true)
+  lastReviewed DateTime?
+}
+
+model AuditLog {
+  id        String @id @default(uuid())
+  actorId   String?
+  actorRole String?
+  action    String
+  targetType String?
+  targetId  String?
+  meta      String?
+  createdAt DateTime @default(now())
+}
+
+model SessionAudit {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String // login|logout|export|delete|report
+  createdAt DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String @id @default(uuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+// NextAuth models (Auth.js v5 prisma adapter expectations)
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}

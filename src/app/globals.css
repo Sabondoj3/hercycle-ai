@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+body { font-size: 16px; line-height: 1.6; }
+.card { @apply rounded-2xl border border-stone-200 bg-white p-5 shadow-sm; }
+.btn-primary { @apply rounded-xl bg-plum-700 px-5 py-3 font-semibold text-white hover:bg-plum-800 focus:outline-none focus:ring-2 focus:ring-plum-400 focus:ring-offset-2; }
+.btn-secondary { @apply rounded-xl border border-plum-300 px-5 py-3 font-semibold text-plum-800 hover:bg-plum-50 focus:outline-none focus:ring-2 focus:ring-plum-300; }
+.input { @apply w-full rounded-xl border border-stone-300 px-4 py-2.5 focus:border-plum-500 focus:outline-none focus:ring-2 focus:ring-plum-200; }
+.label { @apply mb-1 block text-sm font-semibold text-stone-700; }
+.badge { @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold; }

@@ -1,0 +1,68 @@
+[
+  {
+    "rule_id": "very_short_cycle",
+    "rule_name": "Unusually short cycles",
+    "description": "Repeated cycles much shorter than typical adult range.",
+    "evidence_source": "ACOG / NHS patient guidance on cycle length variation — thresholds require clinician review before production. Placeholder: <21 days repeated.",
+    "threshold": { "maxDays": 21, "minOccurrences": 2 },
+    "severity": "yellow",
+    "recommendation_text": "Your recorded cycles have been shorter than usual on more than one occasion. This pattern can have several possible causes. Consider speaking with a qualified healthcare professional if it continues or concerns you.",
+    "clinician_review_required": true,
+    "date_last_reviewed": null
+  },
+  {
+    "rule_id": "very_long_cycle",
+    "rule_name": "Unusually long or delayed cycles",
+    "description": "Repeated long gaps between period starts.",
+    "evidence_source": "ACOG — placeholder: >45 days repeated. Requires review.",
+    "threshold": { "minDays": 45, "minOccurrences": 2 },
+    "severity": "yellow",
+    "recommendation_text": "Your recorded cycles show long gaps between periods. This pattern can have several possible causes. Consider speaking with a qualified healthcare professional if it continues or concerns you.",
+    "clinician_review_required": true,
+    "date_last_reviewed": null
+  },
+  {
+    "rule_id": "high_variation",
+    "rule_name": "Significant month-to-month variation",
+    "description": "Cycle length varies widely.",
+    "evidence_source": "Clinical review pending — placeholder: range >10 days across last 4 cycles.",
+    "threshold": { "rangeDays": 10, "window": 4 },
+    "severity": "yellow",
+    "recommendation_text": "Your recorded cycle length has varied more during recent months. Your recorded cycle pattern may be worth discussing with a healthcare professional.",
+    "clinician_review_required": true,
+    "date_last_reviewed": null
+  },
+  {
+    "rule_id": "prolonged_bleeding",
+    "rule_name": "Prolonged bleeding",
+    "description": "Period duration 8+ days.",
+    "evidence_source": "Clinical review pending — placeholder threshold.",
+    "threshold": { "minPeriodDays": 8 },
+    "severity": "orange",
+    "recommendation_text": "You recorded bleeding lasting 8 days or more. Medical evaluation may be appropriate — consider speaking with a qualified healthcare professional.",
+    "clinician_review_required": true,
+    "date_last_reviewed": null
+  },
+  {
+    "rule_id": "severe_pain",
+    "rule_name": "Consistently severe pain",
+    "description": "Pain scores 8-10 on multiple days.",
+    "evidence_source": "Clinical review pending — placeholder.",
+    "threshold": { "minScore": 8, "minDays": 3 },
+    "severity": "orange",
+    "recommendation_text": "You recorded severe pain on several days. Medical evaluation may be appropriate. Consider speaking with a qualified healthcare professional.",
+    "clinician_review_required": true,
+    "date_last_reviewed": null
+  },
+  {
+    "rule_id": "heavy_plus_dizzy",
+    "rule_name": "Heavy bleeding with dizziness",
+    "description": "Heavy flow logged on same day as dizziness.",
+    "evidence_source": "Urgent-care triage guidance — placeholder, treat as orange/red pending review.",
+    "threshold": { "flow": "heavy", "symptom": "dizziness" },
+    "severity": "red",
+    "recommendation_text": "Your symptoms may require urgent medical attention. Please contact local emergency services, go to the nearest emergency department, or seek immediate help from a qualified healthcare professional.",
+    "clinician_review_required": true,
+    "date_last_reviewed": null
+  }
+]
