@@ -52,7 +52,12 @@ export default function LogPage() {
       </form>
       <div className="card mt-4">
         <h2 className="font-bold">New period?</h2>
-        <form action="/api/cycles" method="POST" className="mt-2 flex flex-wrap gap-2" onSubmit={async (e) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); const r = await fetch("/api/cycles", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ startDate: String(fd.get("startDate")) }) }); setMsg(r.ok ? "Period recorded." : "Could not record period."); }}>
+        <form action="/api/cycles" method="POST" className="mt-2 flex flex-wrap gap-2" onSubmit={async (e) => { e.preventDefault(); const fd = new FormData(e.currentTarget as HTMLFormElement); const r = await fetch("/api/cycles", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ startDate: String(fd.get("startDate")) }) }); if (r.ok) {
+  setMsg("Period recorded.");
+} else {
+  const data = await r.json().catch(() => ({}));
+  setMsg(data.error || "Could not record period.");
+} }}>
           <input name="startDate" type="date" defaultValue={today} className="input !w-auto" required aria-label="Period start date" />
           <button className="btn-secondary">Record period start</button>
         </form>
