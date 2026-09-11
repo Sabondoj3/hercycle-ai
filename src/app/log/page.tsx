@@ -33,6 +33,9 @@ export default function LogPage() {
   const today = new Date().toISOString().slice(0, 10);
   return (
     <main id="main" className="mx-auto max-w-2xl px-5 py-8">
+      <a href="/dashboard" className="inline-block mb-4 font-semibold text-plum-700 hover:underline">
+        ← Back to Home
+      </a>
       <h1 className="text-3xl font-bold text-plum-800">Log today</h1>
       <form onSubmit={submit} className="card mt-4 grid gap-4">
         <div className="grid gap-4 md:grid-cols-2">
