@@ -9,7 +9,8 @@ export default function LogPage() {
   const [msg, setMsg] = useState("");
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); setMsg("");
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     const body: any = {
       date: String(fd.get("date")), flow: String(fd.get("flow") || ""),
       symptoms: fd.getAll("symptoms").map(String),
@@ -22,7 +23,7 @@ export default function LogPage() {
     if (!body.flow) delete body.flow;
     const res = await fetch("/api/log-day", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     if (res.ok) {
-      e.currentTarget.reset();
+      form.reset();
       window.location.href = "/dashboard";
       return;
     }
