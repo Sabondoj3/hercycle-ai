@@ -92,7 +92,7 @@ model PeriodDay {
   flow      String // spotting | light | medium | heavy
   spottingBetweenPeriods Boolean @default(false)
   createdAt DateTime @default(now())
-  @@index([cycleId, date])
+  @@unique([cycleId, date])
 }
 
 model SymptomCatalog {

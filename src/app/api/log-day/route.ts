@@ -16,9 +16,21 @@ export async function POST(req: Request) {
     let cycle = await prisma.cycleRecord.findFirst({ where: { userId, startDate: { lte: date } }, orderBy: { startDate: "desc" } });
     if (!cycle) cycle = await prisma.cycleRecord.create({ data: { userId, startDate: date } });
     await prisma.periodDay.upsert({
-      where: { id: "00000000-0000-0000-0000-000000000000" },
-      update: {}, create: { cycleId: cycle.id, date, flow: d.flow },
-    }).catch(async () => { await prisma.periodDay.create({ data: { cycleId: cycle!.id, date, flow: d.flow! } }); });
+      where: {
+        cycleId_date: {
+          cycleId: cycle.id,
+          date,
+        },
+      },
+      update: {
+        flow: d.flow,
+      },
+      create: {
+        cycleId: cycle.id,
+        date,
+        flow: d.flow,
+      },
+    });
   }
   for (const s of d.symptoms) await prisma.dailySymptom.create({ data: { userId, date, symptomKey: s } });
   if (d.mood) await prisma.moodLog.create({ data: { userId, date, mood: d.mood } });
