@@ -31,6 +31,64 @@ export default async function DashboardPage() {
           <div className="card"><p className="text-sm font-semibold text-stone-500">AVERAGE CYCLE</p><p className="text-xl font-bold">{stats.avgCycleLength ? `${Math.round(stats.avgCycleLength)} days` : "—"}</p><p className="text-xs">{regularityLabel(stats.variation, stats.count)}</p></div>
           <div className="card"><p className="text-sm font-semibold text-stone-500">AVERAGE PERIOD</p><p className="text-xl font-bold">{stats.avgPeriodLength ? `${stats.avgPeriodLength.toFixed(1)} days` : "—"}</p><p className="text-xs">Last: {last ? new Date(last.startDate).toDateString() : "—"}</p></div>
         </div>
+        <div className="card mt-4 overflow-hidden bg-gradient-to-br from-rose2-50 via-white to-lavender-50">
+          <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-rose2-600">Your Cycle Guide</p>
+              <h2 className="mt-1 text-2xl font-bold text-plum-900">Understand where you are in your cycle</h2>
+              <p className="mt-2 max-w-2xl text-sm text-stone-600">
+                HerCycle uses your recorded cycle history to estimate upcoming cycle events. Estimates improve as you add more complete cycles.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white/80 px-4 py-3 text-sm shadow-sm ring-1 ring-rose2-100">
+              <p className="font-semibold text-plum-800">Prediction confidence</p>
+              <p className="capitalize text-stone-600">{pred.confidence}</p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-2xl bg-blush-50 p-4">
+              <p className="text-2xl">🩸</p>
+              <p className="mt-2 text-sm font-semibold text-plum-800">Last period start</p>
+              <p className="font-bold">{last ? new Date(last.startDate).toDateString() : "No period recorded"}</p>
+            </div>
+
+            <div className="rounded-2xl bg-rose2-50 p-4">
+              <p className="text-2xl">🌸</p>
+              <p className="mt-2 text-sm font-semibold text-plum-800">Next period</p>
+              <p className="font-bold">
+                {pred.nextPeriodStart ? pred.nextPeriodStart.toDateString() : "More cycle history needed"}
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-lavender-50 p-4">
+              <p className="text-2xl">🥚</p>
+              <p className="mt-2 text-sm font-semibold text-plum-800">Estimated ovulation</p>
+              <p className="font-bold">
+                {pred.ovulationDate ? pred.ovulationDate.toDateString() : "Not enough data"}
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-peach-50 p-4">
+              <p className="text-2xl">🌱</p>
+              <p className="mt-2 text-sm font-semibold text-plum-800">Estimated fertile window</p>
+              <p className="font-bold">
+                {pred.fertileStart && pred.fertileEnd
+                  ? `${pred.fertileStart.toDateString()} – ${pred.fertileEnd.toDateString()}`
+                  : "Not enough data"}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-2xl bg-white/80 p-4 text-sm text-stone-600 ring-1 ring-rose2-100">
+            <p className="font-semibold text-plum-800">Fertility guidance</p>
+            <p className="mt-1">
+              Days outside the estimated fertile window may have lower estimated fertility, but they are not guaranteed “safe days.”
+              Cycle-based predictions should not be used as the sole method of contraception.
+            </p>
+          </div>
+        </div>
+
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <div className="card"><h2 className="font-bold">Pattern alerts (cautious, not diagnosis)</h2>{alerts.length === 0 ? <p className="text-sm text-stone-600">No concerning pattern detected from currently available records.</p> : alerts.map((a) => (<p key={a.id} className="mt-2 text-sm"><span className="badge bg-amber-100 text-amber-900">{a.level}</span> {a.message}</p>))}<Link href="/insights" className="mt-2 inline-block text-sm font-semibold text-plum-700">View insights →</Link></div>
           <div className="card"><h2 className="font-bold">Quick actions</h2><div className="mt-2 flex flex-wrap gap-2"><Link className="btn-primary" href="/log">+ Log today</Link><Link className="btn-secondary" href="/companion">Ask HerCycle AI</Link><Link className="btn-secondary" href="/reports">Reports</Link></div><p className="mt-3 text-xs text-stone-500">Cycle-based fertility predictions are estimates and should not be relied upon as the sole method of contraception.</p></div>
